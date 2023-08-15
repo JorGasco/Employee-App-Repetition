@@ -20,6 +20,7 @@ fun printPayslip(){
         |Name: $firstName                                       ID: $id                  
         |Surname: $surName
         |Gender: $gender                                      
+        |FullName: ${fullName()}
         |______________________________________________________________________    
         |     PAYMENT DETAILS (gross pay: $grossSalary)                                                                    
         |______________________________________________________________________
@@ -31,4 +32,14 @@ fun printPayslip(){
         |           Cycle To Work: $cycleToWork         
         |______________________________________________________________________""".trimMargin("|")
     )
+}
+
+fun fullName(): String{
+    val fullName = "$firstName $surName"
+
+    return when(gender){
+        "m","M" -> "Mr. $fullName"
+        "f","F" -> "Ms. $fullName"
+        else -> fullName
+    }
 }
