@@ -1,13 +1,15 @@
+import java.lang.Math.round
+
 // Variables
 val firstName = "Joe"
 val surName = "Soap"
 val gender = "m"
 val id = 6143
 val grossSalary =67543.21
-val paye = 38.5
-val prsi = 5.2
+val payePercentage = 38.5
+val prsiPercentage = 5.2
 val annualBonus = 1450.50
-val cycleToWork = 54.33
+val cycleToWorkMonthlyDeduction = 54.33
 
 fun main(args: Array<String>){
     printPayslip()
@@ -24,12 +26,17 @@ fun printPayslip(){
         |______________________________________________________________________    
         |     PAYMENT DETAILS (gross pay: $grossSalary)                                                                    
         |______________________________________________________________________
-        |           
+        |           Salary: ${getMonthlySalary()}
         |           Bonus:  $annualBonus          
         |______________________________________________________________________
-        |           PAYE: $paye                
-        |           PRSI: $prsi  
-        |           Cycle To Work: $cycleToWork         
+        |           Total Deductions : ${getTotalMonthlyDeductions()}
+        |______________________________________________________________________
+        |           PAYE: $payePercentage                
+        |           PRSI: $prsiPercentage  
+        |           Cycle To Work: $prsiPercentage         
+        |______________________________________________________________________           
+        |           Monthly Net Pay: ${getNetMonthlyPay()}    
+        |           
         |______________________________________________________________________""".trimMargin("|")
     )
 }
@@ -43,3 +50,13 @@ fun fullName(): String{
         else -> fullName
     }
 }
+
+private fun getMonthlySalary() = grossSalary / 12
+private fun getMonthlyBonus() = annualBonus / 12
+private fun getMonthlyPRSI() = getMonthlySalary() * (prsiPercentage / 100)
+private fun getMonthlyPAYE() = getMonthlySalary() * (payePercentage / 100)
+private fun getGrossMonthlyPay() = getMonthlySalary() + getMonthlyBonus()
+private fun getTotalMonthlyDeductions() = getMonthlyPAYE() + getMonthlyPRSI() + cycleToWorkMonthlyDeduction
+private fun getNetMonthlyPay() = getGrossMonthlyPay() - getTotalMonthlyDeductions()
+
+//private fun getTotalYearlyDeductions() = grossSalary * (payePercentage / 100) + grossSalary * (prsiPercentage / 100) + cycleToWorkMonthlyDeduction * 12
