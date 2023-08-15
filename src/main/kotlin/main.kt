@@ -1,28 +1,35 @@
 import java.lang.Math.round
 
-// Variables
-val firstName = "Joe"
-val surName = "Soap"
-val gender = "m"
-val id = 6143
-val grossSalary =67543.21
-val payePercentage = 38.5
-val prsiPercentage = 5.2
-val annualBonus = 1450.50
-val cycleToWorkMonthlyDeduction = 54.33
 
 fun main(args: Array<String>){
-    printPayslip()
+
+    var input : Int
+
+    do {
+        input = menu()
+        when(input) {
+            1 -> println("Monthly Salary: ${getMonthlySalary()}")
+            2 -> println("Monthly PRSI: ${getMonthlyPRSI()}")
+            3 ->println("Monthly PAYE: ${getMonthlyPAYE()}")
+            4 -> println("Monthly Gross Pay: ${getGrossMonthlyPay()}")
+            5 -> println("Monthly Total Deductions: ${getTotalMonthlyDeductions()}")
+            6 -> println("Monthly Net Pay: ${getNetMonthlyPay()}")
+            7 -> println(getPayslip())
+            -1 -> println("Exiting App")
+            else -> println("Invalid Option")
+        }
+        println()
+    } while (input != -1)
 }
 
-fun printPayslip(){
+fun getPayslip(){
     println(
         """
         |______________________________________________________________________
         |Name: $firstName                                       ID: $id                  
         |Surname: $surName
         |Gender: $gender                                      
-        |FullName: ${fullName()}
+        |FullName: ${getFullName()}
         |______________________________________________________________________    
         |     PAYMENT DETAILS (gross pay: $grossSalary)                                                                    
         |______________________________________________________________________
@@ -41,7 +48,7 @@ fun printPayslip(){
     )
 }
 
-fun fullName(): String{
+fun getFullName(): String{
     val fullName = "$firstName $surName"
 
     return when(gender){
@@ -51,12 +58,30 @@ fun fullName(): String{
     }
 }
 
-private fun getMonthlySalary() = grossSalary / 12
-private fun getMonthlyBonus() = annualBonus / 12
-private fun getMonthlyPRSI() = getMonthlySalary() * (prsiPercentage / 100)
-private fun getMonthlyPAYE() = getMonthlySalary() * (payePercentage / 100)
-private fun getGrossMonthlyPay() = getMonthlySalary() + getMonthlyBonus()
-private fun getTotalMonthlyDeductions() = getMonthlyPAYE() + getMonthlyPRSI() + cycleToWorkMonthlyDeduction
-private fun getNetMonthlyPay() = getGrossMonthlyPay() - getTotalMonthlyDeductions()
+private fun getMonthlySalary() = roundTwoDecimals(grossSalary / 12)
+private fun getMonthlyBonus() = roundTwoDecimals(annualBonus / 12)
+private fun getMonthlyPRSI() = roundTwoDecimals(getMonthlySalary() * (prsiPercentage / 100))
+private fun getMonthlyPAYE() = roundTwoDecimals(getMonthlySalary() * (payePercentage / 100))
+private fun getGrossMonthlyPay() = roundTwoDecimals((getMonthlySalary() + getMonthlyBonus()))
+private fun getTotalMonthlyDeductions() = roundTwoDecimals(getMonthlyPAYE() + getMonthlyPRSI() + cycleToWorkMonthlyDeduction)
+private fun getNetMonthlyPay() = roundTwoDecimals((getGrossMonthlyPay() - getTotalMonthlyDeductions()))
+
+fun roundTwoDecimals(number: Double) = "%.2f".format(number).toDouble()
 
 //private fun getTotalYearlyDeductions() = grossSalary * (payePercentage / 100) + grossSalary * (prsiPercentage / 100) + cycleToWorkMonthlyDeduction * 12
+
+fun menu() : Int {
+    print("""
+         Employee Menu for ${getFullName()}
+           1. Monthly Salary
+           2. Monthly PRSI
+           3. Monthly PAYE
+           4. Monthly Gross Pay
+           5. Monthly Total Deductions
+           6. Monthly Net Pay
+           7. Full Payslip
+          -1. Exit
+         Enter Option : """)
+    return readLine()!!.toInt()
+}
+
