@@ -31,10 +31,8 @@ data class Employee(
             println(
                 """
         |______________________________________________________________________
-        |Name: ${firstName}                                       ID: ${employeeID}                  
-        |Surname: ${surName}
+        |Fullname:${getFullName()}                                 ID: ${employeeID}                  
         |Gender: ${gender}                                      
-        |FullName: ${getFullName()}
         |______________________________________________________________________    
         |     PAYMENT DETAILS (gross pay: ${grossSalary}                                                                    
         |______________________________________________________________________
