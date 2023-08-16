@@ -3,7 +3,9 @@ import ie.setu.models.Employee
 
 var employees = EmployeeAPI()
 fun main(args: Array<String>){
-
+start()
+}
+fun start(){
     var input : Int
 
     do {
@@ -20,7 +22,6 @@ fun main(args: Array<String>){
         println()
     } while (input != -1)
 }
-
 //private fun getTotalYearlyDeductions() = grossSalary * (payePercentage / 100) + grossSalary * (prsiPercentage / 100) + cycleToWorkMonthlyDeduction * 12
 
 fun menu() : Int {
@@ -59,7 +60,8 @@ fun add(){
 }
 
 fun list(){
-    println(employees.findAll())
+    employees.findAll()
+        .forEach{ println(it) }
 }
 
 fun search() {

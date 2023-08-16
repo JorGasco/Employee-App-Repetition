@@ -52,5 +52,22 @@ data class Employee(
         |______________________________________________________________________""".trimMargin("|")
             )
         }
+
+    override fun toString(): String {
+        return """ 
+         |Employee ID: $employeeID
+         |First Name = $firstName 
+         |Surname = $surName  
+         |Gender = $gender
+         |grossSalary = $grossSalary 
+         |payePercentage = $payePercentage 
+         |prsiPercentage = $prsiPercentage 
+         |annualBonus = $annualBonus 
+         |cycleToWorkMonthlyDeduction = $cycleToWorkMonthlyDeduction     
+         |""".trimMargin()
+
     }
+
+
+}
 
