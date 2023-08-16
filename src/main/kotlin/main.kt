@@ -1,5 +1,4 @@
 import ie.setu.models.Employee
-import java.lang.Math.round
 
 var employee =  Employee("Joe", "Soap", 'm', 6143, 67543.21, 38.5, 5.2, 1450.50, 54.33)
 fun main(args: Array<String>){
@@ -27,7 +26,7 @@ fun getPayslip(){
     println(
         """
         |______________________________________________________________________
-        |Name: ${employee.firstName}                                       ID: ${employee.id}                  
+        |Name: ${employee.firstName}                                       ID: ${employee.employeeID}                  
         |Surname: ${employee.surName}
         |Gender: ${employee.gender}                                      
         |FullName: ${getFullName()}
