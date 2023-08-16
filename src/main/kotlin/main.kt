@@ -1,20 +1,19 @@
+import ie.setu.controllers.EmployeeAPI
 import ie.setu.models.Employee
 
-var employee =  Employee("Joe", "Soap", 'm', 6143, 67543.21, 38.5, 5.2, 1450.50, 54.33)
+var employees = EmployeeAPI()
 fun main(args: Array<String>){
-    add()
+
     var input : Int
 
     do {
         input = menu()
-        when(input) {
-            1 -> println("Monthly Salary: ${getMonthlySalary()}")
-            2 -> println("Monthly PRSI: ${getMonthlyPRSI()}")
-            3 ->println("Monthly PAYE: ${getMonthlyPAYE()}")
-            4 -> println("Monthly Gross Pay: ${getGrossMonthlyPay()}")
-            5 -> println("Monthly Total Deductions: ${getTotalMonthlyDeductions()}")
-            6 -> println("Monthly Net Pay: ${getNetMonthlyPay()}")
-            7 -> println(getPayslip())
+        when (input) {
+            1 -> add()
+            2 -> list()
+            3 -> search()
+            4 -> paySlip()
+            5 -> dummyData()
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
@@ -22,66 +21,19 @@ fun main(args: Array<String>){
     } while (input != -1)
 }
 
-fun getPayslip(){
-    println(
-        """
-        |______________________________________________________________________
-        |Name: ${employee.firstName}                                       ID: ${employee.employeeID}                  
-        |Surname: ${employee.surName}
-        |Gender: ${employee.gender}                                      
-        |FullName: ${getFullName()}
-        |______________________________________________________________________    
-        |     PAYMENT DETAILS (gross pay: ${employee.grossSalary}                                                                    
-        |______________________________________________________________________
-        |           Salary: ${getMonthlySalary()}
-        |           Bonus:  ${employee.annualBonus}          
-        |______________________________________________________________________
-        |           Total Deductions : ${getTotalMonthlyDeductions()}
-        |______________________________________________________________________
-        |           PAYE: ${employee.payePercentage}                
-        |           PRSI: ${employee.prsiPercentage}  
-        |           Cycle To Work: ${employee.cycleToWorkMonthlyDeduction}         
-        |______________________________________________________________________           
-        |           Monthly Net Pay: ${getNetMonthlyPay()}    
-        |           
-        |______________________________________________________________________""".trimMargin("|")
-    )
-}
-
-fun getFullName(): String{
-    val fullName = "${employee.firstName} ${employee.surName}"
-
-    return when(employee.gender){
-        'm', 'M' -> "Mr. $fullName"
-        'f', 'F' -> "Ms. $fullName"
-        else -> fullName
-    }
-}
-
-private fun getMonthlySalary() = roundTwoDecimals(employee.grossSalary / 12)
-private fun getMonthlyBonus() = roundTwoDecimals(employee.annualBonus / 12)
-private fun getMonthlyPRSI() = roundTwoDecimals(getMonthlySalary() * (employee.prsiPercentage / 100))
-private fun getMonthlyPAYE() = roundTwoDecimals(getMonthlySalary() * (employee.payePercentage / 100))
-private fun getGrossMonthlyPay() = roundTwoDecimals((getMonthlySalary() + getMonthlyBonus()))
-private fun getTotalMonthlyDeductions() = roundTwoDecimals(getMonthlyPAYE() + getMonthlyPRSI() + employee.cycleToWorkMonthlyDeduction)
-private fun getNetMonthlyPay() = roundTwoDecimals((getGrossMonthlyPay() - getTotalMonthlyDeductions()))
-
-fun roundTwoDecimals(number: Double) = "%.2f".format(number).toDouble()
-
 //private fun getTotalYearlyDeductions() = grossSalary * (payePercentage / 100) + grossSalary * (prsiPercentage / 100) + cycleToWorkMonthlyDeduction * 12
 
 fun menu() : Int {
-    print("""
-         Employee Menu for ${getFullName()}
-           1. Monthly Salary
-           2. Monthly PRSI
-           3. Monthly PAYE
-           4. Monthly Gross Pay
-           5. Monthly Total Deductions
-           6. Monthly Net Pay
-           7. Full Payslip
-          -1. Exit
-         Enter Option : """)
+  print(""" 
+         |Employee Menu
+         |   1. Add Employee
+         |   2. List All Employees
+         |   3. Search Employees 
+         |   4. Print Payslip for Employee
+         |   5. add Data Employee
+         |  -1. Exit
+         |       
+         |Enter Option : """.trimMargin())
     return readLine()!!.toInt()
 }
 
@@ -92,8 +44,6 @@ fun add(){
     val surname = readLine().toString()
     print("Enter gender (m/f): ")
     val gender = readLine()!!.toCharArray()[0]
-    print("Enter employee ID: ")
-    val employeeID = readLine()!!.toInt()
     print("Enter gross salary: ")
     val grossSalary = readLine()!!.toDouble()
     print("Enter PAYE %: ")
@@ -105,6 +55,37 @@ fun add(){
     print("Enter Cycle to Work Deduction: ")
     val cycleToWorkMonthlyDeduction= readLine()!!.toDouble()
 
-    employee = Employee(firstName, surname, gender, employeeID, grossSalary, payePercentage, prsiPercentage, annualBonus, cycleToWorkMonthlyDeduction)
+    employees.create(Employee(firstName, surname, gender, 0, grossSalary, payePercentage, prsiPercentage, annualBonus, cycleToWorkMonthlyDeduction))
 }
+
+fun list(){
+    println(employees.findAll())
+}
+
+fun search() {
+    val employee = getEmployeeById()
+    if (employee == null)
+        println("No employee found")
+    else
+        println(employee)
+}
+
+internal fun getEmployeeById(): Employee? {
+    print("Enter the employee id to search by: ")
+    val employeeID = readLine()!!.toInt()
+    return employees.findOne(employeeID)
+}
+
+fun paySlip(){
+    val employee = getEmployeeById()
+    if (employee != null)
+        println(employee.getPayslip())
+}
+
+fun dummyData() {
+    employees.create(Employee("Joe", "Soap", 'm', 0, 35655.43, 31.0, 7.5, 2000.0, 25.6))
+    employees.create(Employee("Joan", "Murphy", 'f', 0, 54255.13, 32.5, 7.0, 1500.0, 55.3))
+    employees.create(Employee("Mary", "Quinn", 'f', 0, 75685.41, 40.0, 8.5, 4500.0, 0.0))
+}
+
 
