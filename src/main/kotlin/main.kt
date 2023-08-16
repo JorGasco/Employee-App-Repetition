@@ -1,6 +1,7 @@
+import ie.setu.models.Employee
 import java.lang.Math.round
 
-
+var employee =  Employee("Joe", "Soap", 'm', 6143, 67543.21, 38.5, 5.2, 1450.50, 54.33)
 fun main(args: Array<String>){
 
     var input : Int
@@ -26,21 +27,21 @@ fun getPayslip(){
     println(
         """
         |______________________________________________________________________
-        |Name: $firstName                                       ID: $id                  
-        |Surname: $surName
-        |Gender: $gender                                      
+        |Name: ${employee.firstName}                                       ID: ${employee.id}                  
+        |Surname: ${employee.surName}
+        |Gender: ${employee.gender}                                      
         |FullName: ${getFullName()}
         |______________________________________________________________________    
-        |     PAYMENT DETAILS (gross pay: $grossSalary)                                                                    
+        |     PAYMENT DETAILS (gross pay: ${employee.grossSalary}                                                                    
         |______________________________________________________________________
         |           Salary: ${getMonthlySalary()}
-        |           Bonus:  $annualBonus          
+        |           Bonus:  ${employee.annualBonus}          
         |______________________________________________________________________
         |           Total Deductions : ${getTotalMonthlyDeductions()}
         |______________________________________________________________________
-        |           PAYE: $payePercentage                
-        |           PRSI: $prsiPercentage  
-        |           Cycle To Work: $prsiPercentage         
+        |           PAYE: ${employee.payePercentage}                
+        |           PRSI: ${employee.prsiPercentage}  
+        |           Cycle To Work: ${employee.cycleToWorkMonthlyDeduction}         
         |______________________________________________________________________           
         |           Monthly Net Pay: ${getNetMonthlyPay()}    
         |           
@@ -49,21 +50,21 @@ fun getPayslip(){
 }
 
 fun getFullName(): String{
-    val fullName = "$firstName $surName"
+    val fullName = "${employee.firstName} ${employee.surName}"
 
-    return when(gender){
-        "m","M" -> "Mr. $fullName"
-        "f","F" -> "Ms. $fullName"
+    return when(employee.gender){
+        'm', 'M' -> "Mr. $fullName"
+        'f', 'F' -> "Ms. $fullName"
         else -> fullName
     }
 }
 
-private fun getMonthlySalary() = roundTwoDecimals(grossSalary / 12)
-private fun getMonthlyBonus() = roundTwoDecimals(annualBonus / 12)
-private fun getMonthlyPRSI() = roundTwoDecimals(getMonthlySalary() * (prsiPercentage / 100))
-private fun getMonthlyPAYE() = roundTwoDecimals(getMonthlySalary() * (payePercentage / 100))
+private fun getMonthlySalary() = roundTwoDecimals(employee.grossSalary / 12)
+private fun getMonthlyBonus() = roundTwoDecimals(employee.annualBonus / 12)
+private fun getMonthlyPRSI() = roundTwoDecimals(getMonthlySalary() * (employee.prsiPercentage / 100))
+private fun getMonthlyPAYE() = roundTwoDecimals(getMonthlySalary() * (employee.payePercentage / 100))
 private fun getGrossMonthlyPay() = roundTwoDecimals((getMonthlySalary() + getMonthlyBonus()))
-private fun getTotalMonthlyDeductions() = roundTwoDecimals(getMonthlyPAYE() + getMonthlyPRSI() + cycleToWorkMonthlyDeduction)
+private fun getTotalMonthlyDeductions() = roundTwoDecimals(getMonthlyPAYE() + getMonthlyPRSI() + employee.cycleToWorkMonthlyDeduction)
 private fun getNetMonthlyPay() = roundTwoDecimals((getGrossMonthlyPay() - getTotalMonthlyDeductions()))
 
 fun roundTwoDecimals(number: Double) = "%.2f".format(number).toDouble()
