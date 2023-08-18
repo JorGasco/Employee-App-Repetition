@@ -1,8 +1,14 @@
 import ie.setu.controllers.EmployeeAPI
 import ie.setu.models.Employee
+import mu.KotlinLogging
+
+
 
 var employees = EmployeeAPI()
+
+val logger = KotlinLogging.logger {}
 fun main(args: Array<String>){
+    logger.info { "Launching Employee App" }
 start()
 }
 fun start(){
@@ -16,6 +22,8 @@ fun start(){
             3 -> search()
             4 -> paySlip()
             5 -> dummyData()
+            6 -> updateEmployee()
+
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
@@ -32,6 +40,7 @@ fun menu() : Int {
          |   3. Search Employees 
          |   4. Print Payslip for Employee
          |   5. add Data Employee
+         |   6. Update
          |  -1. Exit
          |       
          |Enter Option : """.trimMargin())
@@ -59,6 +68,7 @@ fun add(){
     employees.create(Employee(firstName, surname, gender, 0, grossSalary, payePercentage, prsiPercentage, annualBonus, cycleToWorkMonthlyDeduction))
 }
 
+
 fun list(){
     employees.findAll()
         .forEach{ println(it) }
@@ -78,11 +88,58 @@ internal fun getEmployeeById(): Employee? {
     return employees.findOne(employeeID)
 }
 
+internal fun getEmployeeToChangeDetails(): Employee? {
+    print("Enter the employee id to change their details: ")
+    val employeeID = readLine()!!.toInt()
+    return employees.findOne(employeeID)
+}
+
 fun paySlip(){
     val employee = getEmployeeById()
     if (employee != null)
         println(employee.getPayslip())
 }
+
+
+fun updateEmployee() {
+
+        val employee = getEmployeeToChangeDetails()
+
+        if (employee != null) {
+            print("Enter updated first name: ")
+            val firstName = readLine().toString()
+            print("Enter updated surname: ")
+            val surname = readLine().toString()
+            print("Enter updated gender (m/f): ")
+            val gender = readLine()!!.toCharArray()[0]
+            print("Enter updated gross salary: ")
+            val grossSalary = readLine()!!.toDouble()
+            print("Enter updated PAYE %: ")
+            val payePercentage = readLine()!!.toDouble()
+            print("Enter updated PRSI %: ")
+            val prsiPercentage = readLine()!!.toDouble()
+            print("Enter updated Annual Bonus: ")
+            val annualBonus = readLine()!!.toDouble()
+            print("Enter updated Cycle to Work Deduction: ")
+            val cycleToWorkMonthlyDeduction = readLine()!!.toDouble()
+
+            val updatedEmployee = Employee(
+                firstName, surname, gender, employee.employeeID,
+                grossSalary, payePercentage, prsiPercentage,
+                annualBonus, cycleToWorkMonthlyDeduction
+            )
+
+            if (employees.update(employee.employeeID, updatedEmployee)) {
+                println("Employee updated successfully.")
+            } else {
+                println("Failed to update employee. Employee not found.")
+            }
+        } else {
+            println("Employee not found.")
+        }
+    }
+
+
 
 fun dummyData() {
     employees.create(Employee("Joe", "Soap", 'm', 0, 35655.43, 31.0, 7.5, 2000.0, 25.6))

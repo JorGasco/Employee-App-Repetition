@@ -4,9 +4,9 @@ import java.io.Serializable
 
 
 data class Employee(
-        val firstName: String, val surName: String, val gender: Char, var employeeID: Int,
-        val grossSalary: Double, val payePercentage: Double, val prsiPercentage: Double,
-        val annualBonus: Double, val cycleToWorkMonthlyDeduction: Double){
+    var firstName: String, var surName: String, var gender: Char, var employeeID: Int,
+    var grossSalary: Double, var payePercentage: Double, var prsiPercentage: Double,
+    var annualBonus: Double, var cycleToWorkMonthlyDeduction: Double){
         fun getFullName(): String{
             val fullName = "${firstName} ${surName}"
 
