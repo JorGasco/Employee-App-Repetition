@@ -1,12 +1,15 @@
+package ie.setu
+
 import ie.setu.controllers.EmployeeAPI
 import ie.setu.models.Employee
 import mu.KotlinLogging
 
+val logger = KotlinLogging.logger {}
 
 
 var employees = EmployeeAPI()
 
-val logger = KotlinLogging.logger {}
+
 fun main(args: Array<String>){
     logger.info { "Launching Employee App" }
 start()
@@ -23,6 +26,8 @@ fun start(){
             4 -> paySlip()
             5 -> dummyData()
             6 -> updateEmployee()
+            7-> loadEmployees()
+            8-> saveEmployees()
 
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
@@ -41,6 +46,8 @@ fun menu() : Int {
          |   4. Print Payslip for Employee
          |   5. add Data Employee
          |   6. Update
+         |   7. load
+         |   8. save
          |  -1. Exit
          |       
          |Enter Option : """.trimMargin())
@@ -139,7 +146,23 @@ fun updateEmployee() {
         }
     }
 
+fun loadEmployees() {
+    if (employees.loadEmployeesFromFile()) {
+        println("Employees loaded successfully:")
+        println(employees.findAll())
+    } else {
+        println("Error loading employees, see debug log for more info")
+    }
+}
 
+fun saveEmployees() {
+    if (employees.saveEmployeesToFile()) {
+        println("Employees saved successfully:")
+        println(employees.findAll())
+    } else {
+        println("Error saving employees, see debug log for more info")
+    }
+}
 
 fun dummyData() {
     employees.create(Employee("Joe", "Soap", 'm', 0, 35655.43, 31.0, 7.5, 2000.0, 25.6))

@@ -6,7 +6,7 @@ import java.io.Serializable
 data class Employee(
     var firstName: String, var surName: String, var gender: Char, var employeeID: Int,
     var grossSalary: Double, var payePercentage: Double, var prsiPercentage: Double,
-    var annualBonus: Double, var cycleToWorkMonthlyDeduction: Double){
+    var annualBonus: Double, var cycleToWorkMonthlyDeduction: Double): Serializable{
         fun getFullName(): String{
             val fullName = "${firstName} ${surName}"
 

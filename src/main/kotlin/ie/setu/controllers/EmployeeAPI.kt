@@ -1,6 +1,9 @@
 package ie.setu.controllers
 
+import ie.setu.logger
 import ie.setu.models.Employee
+import java.io.*
+
 
 
 var lastId = 0
@@ -12,7 +15,7 @@ internal fun getId(): Int {
 class EmployeeAPI {
 
 
-    private val employees = ArrayList<Employee>()
+    private var employees = ArrayList<Employee>()
 
     fun findAll(): List<Employee> {
         return employees
@@ -46,8 +49,45 @@ class EmployeeAPI {
         return false
     }
 
+    fun loadEmployeesFromFile(): Boolean {
+        // ? https://stackoverflow.com/questions/57758314/store-custom-kotlin-data-class-to-disk
+        logger.debug {"Loading employees from file"}
 
+        try {
+            ObjectInputStream(FileInputStream("employees.xml")).use { it ->
+                @Suppress("UNCHECKED_CAST") // https://stackoverflow.com/questions/64041447/in-kotlin-is-there-a-safe-way-to-do-objectinputstream-readobject
+                employees = it.readObject() as ArrayList<Employee>
+                lastId = employees.maxWith(Comparator.comparingInt {it.employeeID}).employeeID + 1
 
+                logger.debug {"Loaded ${employees.size} employees from file"}
+                return true
+            }
+        } catch (e: FileNotFoundException) {
+            logger.debug {"No employees file found"}
+        } catch (e: Exception) {
+            logger.debug {"Error reading employees file: ${e.message}"}
+        }
+
+        return false
+    }
+
+    fun saveEmployeesToFile(): Boolean {
+        // ? https://stackoverflow.com/questions/57758314/store-custom-kotlin-data-class-to-disk
+        logger.debug {"Saving employees to file"}
+
+        try {
+            ObjectOutputStream(FileOutputStream("employees.xml")).use {
+                it.writeObject(employees)
+
+                logger.debug {"Saved ${employees.size} employees to file"}
+                return true
+            }
+        } catch (e: Exception) {
+            logger.debug {"Error saving employees file: ${e.message}"}
+        }
+
+        return false
+    }
 
 }
 
