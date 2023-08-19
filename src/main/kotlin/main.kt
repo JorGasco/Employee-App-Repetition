@@ -28,6 +28,7 @@ fun start(){
             6 -> updateEmployee()
             7-> loadEmployees()
             8-> saveEmployees()
+            9-> deleteEmployee()
 
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
@@ -48,6 +49,7 @@ fun menu() : Int {
          |   6. Update
          |   7. load
          |   8. save
+         |   9. Delete Employee
          |  -1. Exit
          |       
          |Enter Option : """.trimMargin())
@@ -101,6 +103,12 @@ internal fun getEmployeeToChangeDetails(): Employee? {
     return employees.findOne(employeeID)
 }
 
+internal fun employeeIDToDelete(): Employee? {
+    print("Enter the employee id to Delete their details: ")
+    val employeeID = readLine()!!.toInt()
+    return employees.findOne(employeeID)
+}
+
 fun paySlip(){
     val employee = getEmployeeById()
     if (employee != null)
@@ -146,6 +154,23 @@ fun updateEmployee() {
         }
     }
 
+fun deleteEmployee() {
+    val employee = getEmployeeById()
+
+    if (employee != null) {
+        val deleted = employees.delete(employee.employeeID)
+
+        if (deleted) {
+            println("Employee deleted successfully.")
+        } else {
+            println("Failed to delete employee. Employee not found.")
+        }
+    } else {
+        println("Employee not found.")
+    }
+}
+
+
 fun loadEmployees() {
     if (employees.loadEmployeesFromFile()) {
         println("Employees loaded successfully:")
@@ -163,6 +188,8 @@ fun saveEmployees() {
         println("Error saving employees, see debug log for more info")
     }
 }
+
+
 
 fun dummyData() {
     employees.create(Employee("Joe", "Soap", 'm', 0, 35655.43, 31.0, 7.5, 2000.0, 25.6))

@@ -25,6 +25,16 @@ class EmployeeAPI {
         return employees.find { p -> p.employeeID == id }
     }
 
+    fun delete(id: Int): Boolean {
+        val foundEmployee = findOne(id)
+
+        if (foundEmployee != null) {
+            // Use the 'remove' function to remove the found employee from the list.
+            employees.remove(foundEmployee)
+            return true
+        }
+        return false
+    }
     fun create(employee: Employee) {
         employee.employeeID = getId()
         employees.add(employee)
